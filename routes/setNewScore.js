@@ -1,10 +1,10 @@
 const User = require('../models/user');
 
 module.exports = app => {
-  app.post('/setNewScore', (req, res) => {
+  app.post('/setNewScore', async (req, res) => {
     const { tgId, points } = req.body;
     const result = { error: false };
-    const user = User.findOne({ tgId: tgId }).then(data => data);
+    const user = await User.findOne({ tgId: tgId }).then(data => data);
     if (user) {
       User.updateOne({ _id: user.id }, {
         $set: { points: points, pointsTime: parseInt(new Date().getTime() / 1000, 10) },
