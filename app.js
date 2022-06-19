@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
-const migration = require('./functions/migration');
 require('dotenv').config();
 
 const { PORT, NODE_ENV, DB_LINK } = process.env;
@@ -24,6 +23,5 @@ mongoose.connect(dbLink, {
 });
 
 app.listen(NODE_ENV === 'production' ? PORT : 4000, () => {
-  migration();
   routes(app);
 });
