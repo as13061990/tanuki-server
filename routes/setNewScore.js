@@ -7,7 +7,10 @@ module.exports = app => {
     const user = await User.findOne({ tgId: tgId }).then(data => data);
     if (user) {
       User.updateOne({ _id: user.id }, {
-        $set: { points: points, pointsTime: parseInt(new Date().getTime() / 1000, 10) },
+        $set: {
+          points: user.points > points ? user.points : points,
+          pointsTime: parseInt(new Date().getTime() / 1000, 10),
+        },
       }).then(() => null);
     } else {
       result.error = true;
