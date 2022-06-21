@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
 const migration = require('./functions/migration');
+const initTelegramBot = require('./functions/initTelegramBot');
 require('dotenv').config();
 
 const { PORT, NODE_ENV, DB_LINK } = process.env;
@@ -26,4 +27,5 @@ mongoose.connect(dbLink, {
 app.listen(NODE_ENV === 'production' ? PORT : 4000, () => {
   migration();
   routes(app);
+  initTelegramBot();
 });
