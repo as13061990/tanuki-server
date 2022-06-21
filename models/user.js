@@ -3,9 +3,14 @@ const constants = require('../data/constants');
 
 const userSchema = new mongoose.Schema({
   tgId: {
-    type: Number,
+    type: String,
     required: true,
     index: true,
+  },
+  time: {
+    type: Number,
+    required: true,
+    default: 0,
   },
   points: {
     type: Number,
