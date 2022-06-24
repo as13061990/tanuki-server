@@ -3,7 +3,13 @@ const User = require('../models/user');
 const Statistics = require('../classes/Statistics');
 require('dotenv').config();
 
-const { TOKEN, URL, CHAT_ID } = process.env;
+const {
+  TOKEN,
+  URL,
+  CHAT_ID,
+  GROUP_LINK,
+  BOT_LINK,
+} = process.env;
 
 const langs = {
   not_subscribe: 'Ой, кажется, ты не подписан на наш канал. Чтобы участвовать в розыгрыше призов, подпишись канал Tanuki Family в Telegram.',
@@ -22,7 +28,7 @@ const authedKeyboard = Markup.inlineKeyboard([
 ]);
 
 const notAthedKeyboard = Markup.inlineKeyboard([
-  Markup.button.url('Tanuki Family', 'https://t.me/tanukifamily'),
+  Markup.button.url('Tanuki Family', GROUP_LINK),
   Markup.button.callback('Я подписался!', 'checkuser'),
 ]);
 
@@ -74,7 +80,7 @@ module.exports = () => {
     ctx.deleteMessage();
     if (await checkUser(bot, ctx.from.id)) {
       await ctx.answerCbQuery();
-      return ctx.reply(`${langs.ref_link}https://t.me/test_tanuki1_bot?start=${ctx.from.id}`, { ...authedKeyboard });
+      return ctx.reply(`${langs.ref_link}${BOT_LINK}?start=${ctx.from.id}`, { ...authedKeyboard });
     }
     return notAuthAnswer(ctx);
   });
