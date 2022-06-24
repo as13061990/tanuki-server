@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  refUser: {
+    type: String,
+    default: '',
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);

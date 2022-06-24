@@ -53,13 +53,24 @@ module.exports = () => {
       const user = await User.findOne({ tgId: ref }).then(data => data);
       const userId = String(ctx.from.id);
       if (user && user.referrers.every(el => el !== userId)) {
-        const newAttempts = user.attempts + 5;
-        user.referrers.push(String(userId));
-        User.updateOne({ tgId: ref }, {
-          $set: { attempts: newAttempts, referrers: user.referrers },
-        }).then(() => null);
-        Statistics.addRefStarted(String(userId));
-        bot.telegram.sendMessage(ref, langs.ref_answer, { ...authedKeyboard });
+        if (await checkUser(bot, userId)) {
+          const newAttempts = user.attempts + 5;
+          user.referrers.push(String(userId));
+          User.updateOne({ tgId: ref }, {
+            $set: { attempts: newAttempts, referrers: user.referrers },
+          }).then(() => null);
+          Statistics.addRefStarted(String(userId));
+          bot.telegram.sendMessage(ref, langs.ref_answer, { ...authedKeyboard });
+        } else {
+          const time = Math.round(new Date().getTime() / 1000);
+          User.create({
+            tgId: ctx.from.id,
+            name: ctx.from.first_name,
+            time: time,
+            refUser: String(ref),
+          })
+            .then(() => null);
+        }
       }
     }
     Statistics.addBotStarted(String(ctx.from.id));
@@ -76,7 +87,25 @@ module.exports = () => {
   bot.action('checkuser', async ctx => {
     ctx.deleteMessage();
     await ctx.answerCbQuery();
-    if (await checkUser(bot, ctx.from.id)) return authAnswer(ctx);
+    if (await checkUser(bot, ctx.from.id)) {
+      const userId = ctx.from.id;
+      const user = await User.findOne({ tgId: userId }).then(data => data);
+      if (user && user.refUser) {
+        const refUser = await User.findOne({ tgId: user.refUser }).then(data => data);
+        if (refUser && refUser.referrers.every(el => el !== userId)) {
+          if (await checkUser(bot, userId)) {
+            const newAttempts = user.attempts + 5;
+            user.referrers.push(String(userId));
+            User.updateOne({ tgId: user.refUser }, {
+              $set: { attempts: newAttempts, referrers: user.referrers },
+            }).then(() => null);
+            Statistics.addRefStarted(String(userId));
+            bot.telegram.sendMessage(user.refUser, langs.ref_answer, { ...authedKeyboard });
+          }
+        }
+      }
+      return authAnswer(ctx);
+    }
     return notAuthAnswer(ctx);
   });
 
