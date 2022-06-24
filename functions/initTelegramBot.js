@@ -36,8 +36,12 @@ const authAnswer = ctx => ctx.reply(langs.hello_message, { ...authedKeyboard });
 const notAuthAnswer = ctx => ctx.reply(langs.not_subscribe, { ...notAthedKeyboard });
 
 const checkUser = async (bot, userId) => {
-  const data = await bot.telegram.getChatMember(CHAT_ID, userId);
-  return data && data.status !== 'left';
+  try {
+    const data = await bot.telegram.getChatMember(CHAT_ID, userId);
+    return data && data.status !== 'left';
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = () => {
