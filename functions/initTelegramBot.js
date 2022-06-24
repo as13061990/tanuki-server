@@ -79,7 +79,15 @@ module.exports = () => {
   });
 
   bot.command('start', async ctx => {
-    Statistics.addBotStarted(String(ctx.from.id));
+    const tgId = String(ctx.from.id);
+    Statistics.addBotStarted(tgId);
+    const user = await User.findOne({ tgId: tgId }).then(data => data);
+
+    if (!user) {
+      const time = Math.round(new Date().getTime() / 1000);
+      User.create({ tgId: tgId, name: ctx.from.first_name, time: time }).then(() => null);
+    }
+
     if (await checkUser(bot, ctx.from.id)) return authAnswer(ctx);
     return notAuthAnswer(ctx);
   });
