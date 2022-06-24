@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./index.css">
+  <title>Тануки Статистика</title>
+</head>
+<body>
+  <main class="main">
+    <div class="main__str">
+      <p>Общее количество уникальных пользователей, которые запустили чат-бот:</p> <p class="main__count" id="botstarted">0</p>
+    </div>
+    <div class="main__str">
+      <p>Общее количество уникальных пользователей, которые запустили Web-app:</p> <p class="main__count" id="userscount">0</p>
+    </div>
+    <div class="main__str">
+      <p>Общее количество завершенных игр в Web-app’е:</p> <p class="main__count" id="gamescount">0</p>
+    </div>
+    <div class="main__str">
+      <p>Общее количество переходов в чат-бота по реферальным ссылкам:</p> <p class="main__count" id="refstarted">0</p>
+    </div>
+  </main>
+
+  <ul class="table">
+
+  </ul>
+
+  <template id="user-template">
+    <li class="user">
+      <p> Telegram ID </p>
+      <p class="user__id">1234</p>
+      <p> Количество очков </p>
+      <p class="user__points">0</p>
+    </li>
+  </template>
+</body>
+<script src="./script.js"> </script>
+</html>
