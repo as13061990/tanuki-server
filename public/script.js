@@ -17,8 +17,8 @@ const setMainInfo = data => {
 
   usersCount.textContent = data.users.length;
   gamesCount.textContent = data.stats.gamesCount;
-  botstarted.textContent = data.stats.botStarted;
-  refstarted.textContent = data.stats.refStarted;
+  botstarted.textContent = data.stats.botStarted.length;
+  refstarted.textContent = data.stats.refStarted.length;
 };
 
 const getElement = () => {
@@ -27,12 +27,12 @@ const getElement = () => {
   return element;
 };
 
-const generateUser = ({ vkId, points }) => {
+const generateUser = ({ tgId, points }) => {
   const element = getElement();
   const id = element.querySelector('.user__id');
   const pointsElement = element.querySelector('.user__points');
 
-  id.textContent = vkId;
+  id.textContent = tgId;
   pointsElement.textContent = points;
 
   return element;
