@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: constants.ATTEMPTS_COUNT,
   },
+  referrers: {
+    type: [String],
+    required: true,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);

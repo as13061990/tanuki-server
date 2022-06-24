@@ -11,7 +11,7 @@ const checkDaily = user => {
   newDay = Math.round(newDay.getTime() / 1000);
 
   if (user.time < newDay) {
-    user.attempts = constants.ATTEMPTS_COUNT;
+    user.attempts = Math.max(user.attempts, constants.ATTEMPTS_COUNT);
   }
 
   user.time = Math.round(new Date().getTime() / 1000);
