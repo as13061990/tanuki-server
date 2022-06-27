@@ -32,8 +32,9 @@ const notAthedKeyboard = Markup.inlineKeyboard([
   Markup.button.callback('Я подписался!', 'checkuser'),
 ]);
 
-const authAnswer = ctx => ctx.reply(langs.hello_message, { ...authedKeyboard });
-const notAuthAnswer = ctx => ctx.reply(langs.not_subscribe, { ...notAthedKeyboard });
+const authAnswer = ctx => ctx.reply(langs.hello_message, { ...authedKeyboard }).catch(() => null);
+const notAuthAnswer = ctx => ctx.reply(langs.not_subscribe, { ...notAthedKeyboard })
+  .catch(() => null);
 
 const checkUser = async (bot, userId) => {
   try {
@@ -60,7 +61,7 @@ module.exports = () => {
             $set: { attempts: newAttempts, referrers: user.referrers },
           }).then(() => null);
           Statistics.addRefStarted(String(userId));
-          bot.telegram.sendMessage(ref, langs.ref_answer, { ...authedKeyboard });
+          bot.telegram.sendMessage(ref, langs.ref_answer, { ...authedKeyboard }).catch(() => null);
         } else {
           const time = Math.round(new Date().getTime() / 1000);
           User.create({
@@ -69,7 +70,7 @@ module.exports = () => {
             time: time,
             refUser: String(ref),
           })
-            .then(() => null);
+            .then(data => data);
         }
       }
     }
@@ -85,7 +86,7 @@ module.exports = () => {
 
     if (!user) {
       const time = Math.round(new Date().getTime() / 1000);
-      User.create({ tgId: tgId, name: ctx.from.first_name, time: time }).then(() => null);
+      User.create({ tgId: tgId, name: ctx.from.first_name, time: time }).then(data => data);
     }
 
     if (await checkUser(bot, ctx.from.id)) return authAnswer(ctx);
@@ -108,7 +109,8 @@ module.exports = () => {
               $set: { attempts: newAttempts, referrers: user.referrers },
             }).then(() => null);
             Statistics.addRefStarted(String(userId));
-            bot.telegram.sendMessage(user.refUser, langs.ref_answer, { ...authedKeyboard });
+            bot.telegram.sendMessage(user.refUser, langs.ref_answer, { ...authedKeyboard })
+              .catch(() => null);
           }
         }
       }
@@ -121,7 +123,7 @@ module.exports = () => {
     ctx.deleteMessage();
     if (await checkUser(bot, ctx.from.id)) {
       await ctx.answerCbQuery();
-      return ctx.reply(`${langs.ref_link}${BOT_LINK}?start=${ctx.from.id}`, { ...authedKeyboard });
+      return ctx.reply(`${langs.ref_link}${BOT_LINK}?start=${ctx.from.id}`, { ...authedKeyboard }).catch(() => null);
     }
     return notAuthAnswer(ctx);
   });
@@ -130,7 +132,7 @@ module.exports = () => {
     const check = await checkUser(bot, ctx.from.id);
     return ctx.reply(langs.use_keyboard, {
       ...check ? authedKeyboard : notAthedKeyboard,
-    });
+    }).catch(() => null);
   });
 
   bot.launch();
