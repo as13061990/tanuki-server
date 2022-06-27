@@ -94,8 +94,8 @@ module.exports = () => {
   });
 
   bot.action('checkuser', async ctx => {
-    ctx.deleteMessage();
-    await ctx.answerCbQuery();
+    ctx.deleteMessage().catch(() => null);
+    await ctx.answerCbQuery().catch(() => null);
     if (await checkUser(bot, ctx.from.id)) {
       const userId = ctx.from.id;
       const user = await User.findOne({ tgId: userId }).then(data => data);
@@ -122,7 +122,7 @@ module.exports = () => {
   bot.action('moreattempts', async ctx => {
     ctx.deleteMessage().catch(() => null);
     if (await checkUser(bot, ctx.from.id)) {
-      await ctx.answerCbQuery();
+      await ctx.answerCbQuery().catch(() => null);
       return ctx.reply(`${langs.ref_link}${BOT_LINK}?start=${ctx.from.id}`, { ...authedKeyboard }).catch(() => null);
     }
     return notAuthAnswer(ctx);
