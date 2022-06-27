@@ -120,7 +120,7 @@ module.exports = () => {
   });
 
   bot.action('moreattempts', async ctx => {
-    ctx.deleteMessage();
+    ctx.deleteMessage().catch(() => null);
     if (await checkUser(bot, ctx.from.id)) {
       await ctx.answerCbQuery();
       return ctx.reply(`${langs.ref_link}${BOT_LINK}?start=${ctx.from.id}`, { ...authedKeyboard }).catch(() => null);
