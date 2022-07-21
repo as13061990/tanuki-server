@@ -25,8 +25,8 @@ mongoose.connect(dbLink, {
 });
 
 app.listen(NODE_ENV === 'production' ? PORT : 4000, () => {
-  migration();
-  routes(app);
-  initTelegramBot();
+  // migration();
+  // routes(app);
+  // initTelegramBot();
   app.use('/static', express.static('public'));
 });
